@@ -1,5 +1,4 @@
 const AXIOS = require('axios')
-const FS = require('fs')
 
 const API_ENDPOINT = 'http://www.reddit.com/r/'
 // full set of allowed characters
@@ -55,7 +54,7 @@ const nameGenerator = (seed=FIRST_CHAR.repeat(3)) => {
 }
 
 // check if the subreddit does not exist
-//FIXME: this will think a sub doesn't exist if it's just been banned
+//FIXME: this will think a sub doesn't exist if it has just been banned
 async function subDoesNotExist (name) {
   try {
     const url = `${API_ENDPOINT}${name}`
@@ -83,18 +82,9 @@ function unusedSubFinder (seed) {
   }
 }
 
-//the seed if the first one to check, which let's you skip ahead
-const seed = nextName('ac_')
+//the seed is the first one to check, which let's you skip ahead
+const seed = undefined
 const finder = unusedSubFinder(seed)
 finder.next().then(name => {
   console.log(`FOUND: ${name}`)
 })
-
-/* 
-
-Unused subreddits as of 20190814:
-* ab_
-* ac_
-
-
-*/
