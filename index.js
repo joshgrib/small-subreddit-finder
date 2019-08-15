@@ -41,7 +41,7 @@ const nextName = name => {
 }
 
 // generate names 'aaa', 'aab', ..., 'aaaa', 'aaab', 'aaac'...
-const nameGenerator = (seed=FIRST_CHAR.repeat(3)) => {
+const nameGenerator = (seed) => {
   // subreddits must have at least 3 characters
   let name = seed
   return {
@@ -74,7 +74,7 @@ function unusedSubFinder (seed) {
       let found = false
       while (!found) {
         name = nameGen.next()
-        console.log(`Checking ${name}...`)
+        console.log(`    Checking ${name}...`)
         found = await subDoesNotExist(name)
       }
       return name
@@ -82,9 +82,26 @@ function unusedSubFinder (seed) {
   }
 }
 
-//the seed is the first one to check, which let's you skip ahead
-const seed = undefined
-const finder = unusedSubFinder(seed)
-finder.next().then(name => {
-  console.log(`FOUND: ${name}`)
+async function getUnusedSubList(findCount, seed) {
+  const finder = unusedSubFinder(seed)
+  const subs = []
+  while (subs.length < findCount) {
+    const name = await finder.next() 
+    console.log(`FOUND: ${name}`)
+    subs.push(name)
+  }
+  return subs
+}
+
+// the amount of subreddits to find, defaulting to 1
+let findCount = process.argv[2] || 1
+// -1 indicates that this should run continuously
+if (findCount === '-1') findCount = Infinity
+
+const seed = process.argv[3] || FIRST_CHAR.repeat(3)
+
+console.log(`Finding ${findCount} unused subreddit${findCount===1 ? '' : 's'} starting from ${seed}`)
+
+getUnusedSubList(findCount, seed).then(subs => {
+  console.log(`Unused subreddits: ${subs.join(', ')}`)
 })
