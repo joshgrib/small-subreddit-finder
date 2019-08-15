@@ -12,7 +12,7 @@ A node script to find short named subreddits that aren't used.
 
 ## Different ways to run the program
 
-* `yarn main [find-count] [seed]` - find the first `find-count` unused subreddits, if `find-count` is not specified then it will default to `1`
+* `yarn main [find-count] [seed]` - find the first `find-count` unused subreddits
 * `yarn find-first [seed]` - find the first unused subreddit
 * `yarn nonstop [seed]` - continually find unused subreddits 
 
